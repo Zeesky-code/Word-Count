@@ -6,6 +6,7 @@ import picocli.CommandLine.Option;
 import java.io.IOException;
 import java.nio.file.* ;
 import java.util.StringTokenizer;
+import java.util.stream.Stream;
 
 @Command(
 		name = "Word Count",
@@ -44,8 +45,8 @@ public class WordCount implements Runnable{
 		Path path = Paths.get(fileName);
 
 		long lines = 0;
-		try {
-			lines = Files.lines(path).count();
+		try (Stream<String> stream =Files.lines(path) ){
+			lines = stream.count();
 
 		} catch (IOException e) {
 			e.printStackTrace();
