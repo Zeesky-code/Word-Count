@@ -28,22 +28,17 @@ public class WordCount implements Runnable{
 	@Option(names = {"-l", "--countLines"}, description = "Count the number of lines in the file")
 	private Boolean countLines =false;
 
-	public static long countBytes(String fileName) throws IOException {
-		Path path = Paths.get(fileName);
+	public static long countBytes(Path path) throws IOException {
 		return Files.size(path);
 	}
 
-	public static long countWords(String filename) throws IOException{
-		Path path = Paths.get(filename);
+	public static long countWords(Path path) throws IOException{
 		String sentence = Files.readString(path);
 		StringTokenizer tokens = new StringTokenizer(sentence);
 		return  tokens.countTokens();
 	}
 
-	public static long countLines(String fileName) {
-
-		Path path = Paths.get(fileName);
-
+	public static long countLines(Path path) {
 		long lines = 0;
 		try (Stream<String> stream =Files.lines(path) ){
 			lines = stream.count();
@@ -62,7 +57,8 @@ public class WordCount implements Runnable{
 	@Override
 	public void run(){
 		try {
-			System.out.println( (countBytes ? "Number of Bytes:" + countBytes(filename): "" ) +(countLines ? " Number of Lines:" + countLines(filename): "" ) +(countWords ? " Number of Words:" + countWords(filename) +" ": "" ) + filename);
+			Path path = Paths.get(filename);
+			System.out.println( (countBytes ? "Number of Bytes:" + countBytes(path): "" ) +(countLines ? " Number of Lines:" + countLines(path): "" ) +(countWords ? " Number of Words:" + countWords(path) +" ": "" ) + filename);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
