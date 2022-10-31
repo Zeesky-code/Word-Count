@@ -57,16 +57,18 @@ public class WordCount implements Runnable{
 	@Override
 	public void run(){
 		try {
+			//not in a try-resource block because path is not auto-closable
 			Path path = Paths.get(filename);
 			//to print all details if no command is specified
 			if (!countBytes & !countLines & !countWords){
 				System.out.println(countLines(path) + " " +countBytes(path) + " "+ countWords(path) + " " + filename);
 
 			}else{
-				System.out.println( (countBytes ? "Number of Bytes:" + countBytes(path): "" ) +(countLines ? " Number of Lines:" + countLines(path): "" ) +(countWords ? " Number of Words:" + countWords(path) +" ": "" ) + " " +filename);
+				System.out.println( (countLines ? countLines(path): "" ) +(countWords ? countWords(path) +" ": "" ) + (countBytes ? countBytes(path): "" ) + " " +filename);
 			}
 
 		} catch (IOException e) {
+			//put in real error messages
 			System.out.println(e.toString());
 		}
 	}
