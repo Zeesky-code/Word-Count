@@ -33,9 +33,13 @@ public class WordCount implements Runnable{
 	}
 
 	public static long countWords(Path path) throws IOException{
-		String sentence = Files.readString(path);
-		StringTokenizer tokens = new StringTokenizer(sentence);
-		return  tokens.countTokens();
+
+		/** not in a stream try with resource block because tokenizer doesn't work with streams
+		 * check out other ways to read words
+		 */
+			String sentence = Files.readString(path);
+			StringTokenizer tokens = new StringTokenizer(sentence);
+			return  tokens.countTokens();
 	}
 
 	public static long countLines(Path path) {
@@ -44,7 +48,7 @@ public class WordCount implements Runnable{
 			lines = stream.count();
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("Something went wrong, please try again");
 		}
 
 		return lines;
@@ -64,12 +68,13 @@ public class WordCount implements Runnable{
 				System.out.println(countLines(path) + " " +countBytes(path) + " "+ countWords(path) + " " + filename);
 
 			}else{
+
 				System.out.println( (countLines ? countLines(path): "" ) +(countWords ? countWords(path) +" ": "" ) + (countBytes ? countBytes(path): "" ) + " " +filename);
 			}
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			//put in real error messages
-			System.out.println(e.toString());
+			System.out.println("File not found");
 		}
 	}
 
