@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 public class WordCount implements Runnable{
 
 	@Parameters(index="0", description= "The file to count")
-	private String filename;
+	public String filename;
 
 
 	@Option(names = {"-c", "--countBytes"}, description = "Count the number of Bytes in the file")
@@ -58,9 +58,16 @@ public class WordCount implements Runnable{
 	public void run(){
 		try {
 			Path path = Paths.get(filename);
-			System.out.println( (countBytes ? "Number of Bytes:" + countBytes(path): "" ) +(countLines ? " Number of Lines:" + countLines(path): "" ) +(countWords ? " Number of Words:" + countWords(path) +" ": "" ) + filename);
+			//to print all details if no command is specified
+			if (!countBytes & !countLines & !countWords){
+				System.out.println(countLines(path) + " " +countBytes(path) + " "+ countWords(path) + " " + filename);
+
+			}else{
+				System.out.println( (countBytes ? "Number of Bytes:" + countBytes(path): "" ) +(countLines ? " Number of Lines:" + countLines(path): "" ) +(countWords ? " Number of Words:" + countWords(path) +" ": "" ) + " " +filename);
+			}
+
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println(e.toString());
 		}
 	}
 
