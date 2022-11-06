@@ -4,7 +4,9 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.* ;
+import java.util.List;
 import java.util.StringTokenizer;
 import java.util.stream.Stream;
 
@@ -15,8 +17,8 @@ import java.util.stream.Stream;
 
 public class WordCount implements Runnable{
 
-	@Parameters(index="0", description= "The file to count")
-	public String filename;
+	@Parameters(index="0..*", description= "The file to count")
+	public List<String> filenames;
 
 
 	@Option(names = {"-c", "--countBytes"}, description = "Count the number of Bytes in the file")
@@ -44,15 +46,22 @@ public class WordCount implements Runnable{
 
 	public static long countLines(Path path) {
 		long lines = 0;
-		try (Stream<String> stream =Files.lines(path) ){
-			lines = stream.count();
-
+		try (Stream<String> stream = Files.lines(path)) {
+			lines = stream.map(StringTokenizer::new)
+					.mapToInt(StringTokenizer::countTokens).sum();
 		} catch (IOException e) {
 			System.out.println("Something went wrong, please try again");
+			System.out.print(e);
 		}
 
 		return lines;
 
+	}
+
+	public static long countCharacters(Path path){
+		long Characters = 0;
+
+		return Characters;
 	}
 
 	public static void main(String []args){
@@ -60,22 +69,28 @@ public class WordCount implements Runnable{
 	}
 	@Override
 	public void run(){
-		try {
-			//not in a try-resource block because path is not auto-closable
-			Path path = Paths.get(filename);
-			//to print all details if no command is specified
-			if (!countBytes & !countLines & !countWords){
-				System.out.println(countLines(path) + " " +countBytes(path) + " "+ countWords(path) + " " + filename);
 
-			}else{
+			filenames.forEach((filename)->{
+				//not in a try-resource block because path is not auto-closable
+				try {
+					Path path = Paths.get(filename);
+					//to print all details if no command is specified
+					if (!countBytes & !countLines & !countWords){
+						System.out.println(countLines(path) + " " +countBytes(path) + " "+ countWords(path) + " " + filename);
 
-				System.out.println( (countLines ? countLines(path): "" ) +(countWords ? countWords(path) +" ": "" ) + (countBytes ? countBytes(path): "" ) + " " +filename);
-			}
+					}else{
 
-		} catch (Exception e) {
-			//put in real error messages
-			System.out.println("File not found");
-		}
+						System.out.println( (countLines ? countLines(path): "" ) +(countWords ? countWords(path) +" ": "" ) + (countBytes ? countBytes(path): "" ) + " " +filename);
+					}
+				} catch (Exception e) {
+					//put in real error messages
+					System.out.println("File not found");
+				}
+			});
+
+
+
+
 	}
 
 }
