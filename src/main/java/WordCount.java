@@ -4,7 +4,6 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
 import java.io.IOException;
-import java.net.URI;
 import java.nio.file.* ;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -17,7 +16,7 @@ import java.util.stream.Stream;
 
 public class WordCount implements Runnable{
 
-	@Parameters(index="0..*", description= "The file to count")
+	@Parameters(index="*", description= "The file to count")
 	public List<String> filenames;
 
 
@@ -36,8 +35,8 @@ public class WordCount implements Runnable{
 
 	public static long countWords(Path path) throws IOException{
 
-		/** not in a stream try with resource block because tokenizer doesn't work with streams
-		 * check out other ways to read words
+		/* not in a stream try with resource block because tokenizer doesn't work with streams
+		  check out other ways to read words
 		 */
 			String sentence = Files.readString(path);
 			StringTokenizer tokens = new StringTokenizer(sentence);
@@ -51,7 +50,7 @@ public class WordCount implements Runnable{
 					.mapToInt(StringTokenizer::countTokens).sum();
 		} catch (IOException e) {
 			System.out.println("Something went wrong, please try again");
-			System.out.print(e);
+
 		}
 
 		return lines;
@@ -80,7 +79,7 @@ public class WordCount implements Runnable{
 
 					}else{
 
-						System.out.println( (countLines ? countLines(path): "" ) +(countWords ? countWords(path) +" ": "" ) + (countBytes ? countBytes(path): "" ) + " " +filename);
+						System.out.println( (countLines ? countLines(path): "" ) +" "+(countWords ? countWords(path) +" ": "" ) + " "+(countBytes ? countBytes(path): "" ) + " " +filename);
 					}
 				} catch (Exception e) {
 					//put in real error messages
