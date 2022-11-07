@@ -3,6 +3,7 @@ import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.* ;
 import java.util.List;
@@ -29,6 +30,9 @@ public class WordCount implements Runnable{
 	@Option(names = {"-l", "--countLines"}, description = "Count the number of lines in the file")
 	private Boolean countLines =false;
 
+	@Option(names = {"-m", "--countCharacters"}, description = "Count the number of characters in the file")
+	private Boolean countCharacters =false;
+
 	public static long countBytes(Path path) throws IOException {
 		return Files.size(path);
 	}
@@ -38,29 +42,44 @@ public class WordCount implements Runnable{
 		/* not in a stream try with resource block because tokenizer doesn't work with streams
 		  check out other ways to read words
 		 */
-			String sentence = Files.readString(path);
-			StringTokenizer tokens = new StringTokenizer(sentence);
-			return  tokens.countTokens();
-	}
-
-	public static long countLines(Path path) {
-		long lines = 0;
+		long words = 0;
 		try (Stream<String> stream = Files.lines(path)) {
-			lines = stream.map(StringTokenizer::new)
+			words = stream.map(StringTokenizer::new)
 					.mapToInt(StringTokenizer::countTokens).sum();
 		} catch (IOException e) {
 			System.out.println("Something went wrong, please try again");
 
 		}
 
-		return lines;
+		return words;
+	}
+
+	public static long countLines(Path path) throws IOException {
+		long result = 0;
+		try (BufferedReader reader = Files.newBufferedReader(path)) {
+			for (; ; ) {
+				String line = reader.readLine();
+				if (line == null)
+					break;
+				result +=1;
+
+			}
+			return result;
+		}
 
 	}
 
-	public static long countCharacters(Path path){
+	public static long countCharacters(Path path) throws IOException{
+		//I think it's off by 5/7 review later
 		long Characters = 0;
+		try (Stream<String> stream = Files.lines(path)) {
+			Stream<Object> chars = stream.flatMap(s -> s.chars().mapToObj(c->(char) c));
+			Characters = chars.count();
+		}
+
 
 		return Characters;
+
 	}
 
 	public static void main(String []args){
@@ -75,11 +94,11 @@ public class WordCount implements Runnable{
 					Path path = Paths.get(filename);
 					//to print all details if no command is specified
 					if (!countBytes & !countLines & !countWords){
-						System.out.println(countLines(path) + " " +countBytes(path) + " "+ countWords(path) + " " + filename);
+						System.out.println(countLines(path) + " " +countWords(path)  + " "+ countBytes(path)+ " " + " " + countCharacters(path)+ " " +filename);
 
 					}else{
 
-						System.out.println( (countLines ? countLines(path): "" ) +" "+(countWords ? countWords(path) +" ": "" ) + " "+(countBytes ? countBytes(path): "" ) + " " +filename);
+						System.out.println( (countLines ? countLines(path): "" ) +" "+(countWords ? countWords(path) +" ": "" ) + " "+(countBytes ? countBytes(path): "" ) + " "+(countCharacters? countCharacters(path):"")+ " "+filename);
 					}
 				} catch (Exception e) {
 					//put in real error messages
