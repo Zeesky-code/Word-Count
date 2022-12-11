@@ -26,7 +26,7 @@ public class WordCountTest {
 
 	}
 
-	 @Test
+	@Test
 	public void NotFoundErrorWorks() throws Exception {
 		// test if the program can handle invalid inputs
 
@@ -36,14 +36,23 @@ public class WordCountTest {
 
 	}
 
+	@Test
+	public void TestNumberOfLines() throws Exception {
+		// test number of lines are calculated properly for large files.
+
+		String [] flagArgs = new String[]{"-l", "src\\test\\Trial"};
+		WordCount.main(flagArgs);
+		Assert.assertThat(systemOutRule.getLog().trim(),  containsString("27536"));
+
+
+	}
 
 	//Todo
 	//Test that the program correctly counts the number of words in a file. This could be done by providing a test file with a known number of words and verifying that the program outputs the correct number.
-	//Test that the program correctly counts the number of lines in a file. This could be done by providing a test file with a known number of lines and verifying that the program outputs the correct number.
 	//Test that the program correctly counts the number of characters in a file. This could be done by providing a test file with a known number of characters and verifying that the program outputs the correct number.
 	//Test that the program correctly counts the number of bytes in a file. This could be done by providing a test file with a known number of bytes and verifying that the program outputs the correct number.
 
-	
+
 	//Test that the program can handle files with very large numbers of words, lines, characters, or bytes without crashing or producing incorrect output.
 
 }
