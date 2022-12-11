@@ -37,7 +37,7 @@ public class WordCountTest {
 	}
 
 	@Test
-	public void TestNumberOfLines() throws Exception {
+	public void TestNumberOfLines() {
 		// test number of lines are calculated properly for large files.
 
 		String [] flagArgs = new String[]{"-l", "src\\test\\Trial"};
@@ -46,6 +46,29 @@ public class WordCountTest {
 
 
 	}
+
+	@Test
+	public void TestNumberOfWords() {
+		// test number of lines are calculated properly for large files.
+
+		String [] flagArgs = new String[]{"-w", "src\\test\\Test"};
+		WordCount.main(flagArgs);
+		Assert.assertThat(systemOutRule.getLog().trim(),  containsString("34"));
+
+
+	}
+
+	@Test
+	public void TestNumberOfWordsLargeFiles() {
+		// test number of lines are calculated properly for large files.
+		//Note: This test fails. I got the expected from ms word. review later
+		String [] flagArgs = new String[]{"-w", "src\\test\\Trial"};
+		WordCount.main(flagArgs);
+		Assert.assertThat(systemOutRule.getLog().trim(),  containsString("120368"));
+
+
+	}
+
 
 	//Todo
 	//Test that the program correctly counts the number of words in a file. This could be done by providing a test file with a known number of words and verifying that the program outputs the correct number.
