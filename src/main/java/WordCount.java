@@ -4,6 +4,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.* ;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.stream.Stream;
 
 public class WordCount implements Runnable{
 
-	@Parameters(index="*", description= "The file to count")
+	@Parameters( description= "The files to count")
 	public List<String> filenames;
 
 
@@ -30,7 +31,7 @@ public class WordCount implements Runnable{
 	@Option(names = {"-l", "--countLines"}, description = "Count the number of lines in the file")
 	private Boolean countLines =false;
 
-	@Option(names = {"-m", "--countCharacters"}, description = "Count the number of characters in the file")
+	@Option(names = {"-m", "--countCharacters"},  description = "Count the number of characters in the file")
 	private Boolean countCharacters =false;
 
 	public static long countBytes(Path path) throws IOException {
@@ -100,9 +101,11 @@ public class WordCount implements Runnable{
 
 						System.out.println( (countLines ? countLines(path): "" ) +" "+(countWords ? countWords(path) +" ": "" ) + " "+(countBytes ? countBytes(path): "" ) + " "+(countCharacters? countCharacters(path):"")+ " "+filename);
 					}
-				} catch (Exception e) {
+				} catch (FileNotFoundException e) {
 					//put in real error messages
 					System.out.println("File not found");
+				}catch (IOException e){
+					System.out.println("Something went wrong, please try again");
 				}
 			});
 
