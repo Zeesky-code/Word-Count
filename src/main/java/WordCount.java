@@ -4,7 +4,6 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.* ;
 import java.util.List;
@@ -101,7 +100,7 @@ public class WordCount implements Runnable{
 
 						System.out.println( (countLines ? countLines(path): "" ) +" "+(countWords ? countWords(path) +" ": "" ) + " "+(countBytes ? countBytes(path): "" ) + " "+(countCharacters? countCharacters(path):"")+ " "+filename);
 					}
-				} catch (FileNotFoundException e) {
+				} catch (NoSuchFileException e) {
 					//put in real error messages
 					System.out.println("File not found");
 				}catch (IOException e){

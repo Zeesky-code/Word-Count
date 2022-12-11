@@ -16,29 +16,34 @@ public class WordCountTest {
 	@Rule
 	public final SystemOutRule systemOutRule = new SystemOutRule().enableLog();
 
-
-
 	@Test
 	public void TestArgsAreParsedCorrectly() {
-
+		//test if arguments are parsed correctly
 		String [] flagArgs = new String[]{"-c", "-l","\\Trial", "-m", "-w", "\\Test"};
 		WordCount wc = new WordCount();
 		new CommandLine(wc).parseArgs(flagArgs);
-		System.out.println(wc.filenames);
 		assert wc.filenames.equals(Arrays.asList("\\Trial", "\\Test" ));
 
 	}
 
-
 	 @Test
 	public void NotFoundErrorWorks() throws Exception {
-		// dodgy code here
+		// test if the program can handle invalid inputs
 
 		String [] flagArgs = new String[]{"-c", "-l", "-m", "-w", "\\FileThatDoesn'tExist"};
 		WordCount.main(flagArgs);
-		 Assert.assertSame(systemOutRule.getLog().trim(), containsString("File not found"));
-
+		 Assert.assertEquals(systemOutRule.getLog().trim(), "File not found");
 
 	}
+
+
+	//Todo
+	//Test that the program correctly counts the number of words in a file. This could be done by providing a test file with a known number of words and verifying that the program outputs the correct number.
+	//Test that the program correctly counts the number of lines in a file. This could be done by providing a test file with a known number of lines and verifying that the program outputs the correct number.
+	//Test that the program correctly counts the number of characters in a file. This could be done by providing a test file with a known number of characters and verifying that the program outputs the correct number.
+	//Test that the program correctly counts the number of bytes in a file. This could be done by providing a test file with a known number of bytes and verifying that the program outputs the correct number.
+
+	
+	//Test that the program can handle files with very large numbers of words, lines, characters, or bytes without crashing or producing incorrect output.
 
 }
