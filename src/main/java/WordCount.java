@@ -4,9 +4,11 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.* ;
 import java.util.List;
+import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.util.stream.Stream;
 
@@ -42,6 +44,7 @@ public class WordCount implements Runnable{
 		/* not in a stream try with resource block because tokenizer doesn't work with streams
 		  check out other ways to read words
 		 */
+
 		long words = 0;
 		try (Stream<String> stream = Files.lines(path)) {
 			words = stream.map(StringTokenizer::new)
@@ -69,19 +72,22 @@ public class WordCount implements Runnable{
 
 	}
 
-	public static long countCharacters(Path path) throws IOException{
+	public static int countCharacters(Path path) throws IOException{
 		//I think it's off by 5/7 review later
-		long Characters = 0;
-		try (Stream<String> stream = Files.lines(path)) {
-			Stream<Object> chars = stream.flatMap(s -> s.chars().mapToObj(c->(char) c));
-
-			chars = chars.filter(c -> Character.isLetterOrDigit((Character) c));
-
-			Characters = (int) chars.count();
-		}
 
 
-		return Characters;
+			// Read the file line by line and create a stream of strings
+			Stream<String> lines = Files.lines(path);
+
+			// Map each line to a stream of characters
+			Stream<Character> characters = lines.flatMap(line -> line.chars().mapToObj(c -> (char) c));
+
+			// Count the number of characters in the stream
+			int characterCount = (int) characters.count();
+			
+			return characterCount;
+
+
 
 
 	}

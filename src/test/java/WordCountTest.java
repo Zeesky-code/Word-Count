@@ -61,7 +61,7 @@ public class WordCountTest {
 	@Test
 	public void TestNumberOfWordsLargeFiles() {
 		// test number of lines are calculated properly for large files.
-		//Note: This test fails. I got the expected from ms word. review later
+		//Note: This test fails. I got the expected from MS Word. review later
 		String [] flagArgs = new String[]{"-w", "src\\test\\Trial"};
 		WordCount.main(flagArgs);
 		Assert.assertThat(systemOutRule.getLog().trim(),  containsString("120368"));
@@ -75,6 +75,14 @@ public class WordCountTest {
 		WordCount.main(flagArgs);
 		Assert.assertThat(systemOutRule.getLog().trim(),  containsString("174"));
 	}
+
+	@Test
+	public void TestNumberOfCharactersLargeFile(){
+		String [] flagArgs = new String[]{"-m", "src\\test\\Trial"};
+		WordCount.main(flagArgs);
+		Assert.assertThat(systemOutRule.getLog().trim(),  containsString("1602078"));
+	}
+
 	@Test
 	public void TestSize(){
 		String [] flagArgs = new String[]{"-c", "src\\test\\Test"};
@@ -88,6 +96,6 @@ public class WordCountTest {
 		WordCount.main(flagArgs);
 		Assert.assertThat(systemOutRule.getLog().trim(),  containsString("1629670"));
 	}
-	
+
 
 }
