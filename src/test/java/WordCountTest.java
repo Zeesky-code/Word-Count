@@ -69,13 +69,25 @@ public class WordCountTest {
 
 	}
 
+	@Test
+	public void TestNumberOfCharacters(){
+		String [] flagArgs = new String[]{"-m", "src\\test\\Test"};
+		WordCount.main(flagArgs);
+		Assert.assertThat(systemOutRule.getLog().trim(),  containsString("174"));
+	}
+	@Test
+	public void TestSize(){
+		String [] flagArgs = new String[]{"-c", "src\\test\\Test"};
+		WordCount.main(flagArgs);
+		Assert.assertThat(systemOutRule.getLog().trim(),  containsString("185"));
+	}
 
-	//Todo
-	//Test that the program correctly counts the number of words in a file. This could be done by providing a test file with a known number of words and verifying that the program outputs the correct number.
-	//Test that the program correctly counts the number of characters in a file. This could be done by providing a test file with a known number of characters and verifying that the program outputs the correct number.
-	//Test that the program correctly counts the number of bytes in a file. This could be done by providing a test file with a known number of bytes and verifying that the program outputs the correct number.
-
-
-	//Test that the program can handle files with very large numbers of words, lines, characters, or bytes without crashing or producing incorrect output.
+	@Test
+	public void TestSizeLargeFile(){
+		String [] flagArgs = new String[]{"-c", "src\\test\\Trial"};
+		WordCount.main(flagArgs);
+		Assert.assertThat(systemOutRule.getLog().trim(),  containsString("1629670"));
+	}
+	
 
 }

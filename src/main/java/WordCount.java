@@ -74,11 +74,15 @@ public class WordCount implements Runnable{
 		long Characters = 0;
 		try (Stream<String> stream = Files.lines(path)) {
 			Stream<Object> chars = stream.flatMap(s -> s.chars().mapToObj(c->(char) c));
-			Characters = chars.count();
+
+			chars = chars.filter(c -> Character.isLetterOrDigit((Character) c));
+
+			Characters = (int) chars.count();
 		}
 
 
 		return Characters;
+
 
 	}
 
