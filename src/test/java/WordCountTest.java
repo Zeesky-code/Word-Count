@@ -1,20 +1,35 @@
 import org.junit.*;
 import org.junit.Assert;
-import org.junit.contrib.java.lang.system.SystemOutRule;
 import picocli.CommandLine;
 
 import java.io.*;
 import java.nio.file.Path;
 import java.util.Arrays;
 
-import static jdk.nashorn.internal.objects.Global.print;
+
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 
 
 public class WordCountTest {
-	@Rule
-	public final SystemOutRule systemOutRule = new SystemOutRule().enableLog();
+	// setting up streams to get console output
+	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+	private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
+	private final PrintStream originalOut = System.out;
+	private final PrintStream originalErr = System.err;
+
+	@Before
+	public void setUpStreams() {
+		System.setOut(new PrintStream(outContent));
+		System.setErr(new PrintStream(errContent));
+	}
+
+	@After
+	public void restoreStreams() {
+		System.setOut(originalOut);
+		System.setErr(originalErr);
+	}
+
 
 	@Test
 	public void TestArgsAreParsedCorrectly() {
@@ -32,7 +47,7 @@ public class WordCountTest {
 
 		String [] flagArgs = new String[]{"-c", "-l", "-m", "-w", "\\FileThatDoesn'tExist"};
 		WordCount.main(flagArgs);
-		 Assert.assertEquals(systemOutRule.getLog().trim(), "File not found");
+		 Assert.assertThat(outContent.toString(), containsString("File not found"));
 
 	}
 
@@ -42,7 +57,7 @@ public class WordCountTest {
 
 		String [] flagArgs = new String[]{"-l", "src\\test\\Trial"};
 		WordCount.main(flagArgs);
-		Assert.assertThat(systemOutRule.getLog().trim(),  containsString("27536"));
+		Assert.assertThat(outContent.toString(),  containsString("27536"));
 
 
 	}
@@ -53,7 +68,7 @@ public class WordCountTest {
 
 		String [] flagArgs = new String[]{"-w", "src\\test\\Test"};
 		WordCount.main(flagArgs);
-		Assert.assertThat(systemOutRule.getLog().trim(),  containsString("34"));
+		Assert.assertThat(outContent.toString(),  containsString("34"));
 
 
 	}
@@ -64,7 +79,7 @@ public class WordCountTest {
 		//Note: This test fails. I got the expected from MS Word. review later
 		String [] flagArgs = new String[]{"-w", "src\\test\\Trial"};
 		WordCount.main(flagArgs);
-		Assert.assertThat(systemOutRule.getLog().trim(),  containsString("120368"));
+		Assert.assertThat(outContent.toString(),  containsString("120368"));
 
 
 	}
@@ -73,28 +88,28 @@ public class WordCountTest {
 	public void TestNumberOfCharacters(){
 		String [] flagArgs = new String[]{"-m", "src\\test\\Test"};
 		WordCount.main(flagArgs);
-		Assert.assertThat(systemOutRule.getLog().trim(),  containsString("174"));
+		Assert.assertThat(outContent.toString(),  containsString("185"));
 	}
 
 	@Test
 	public void TestNumberOfCharactersLargeFile(){
 		String [] flagArgs = new String[]{"-m", "src\\test\\Trial"};
 		WordCount.main(flagArgs);
-		Assert.assertThat(systemOutRule.getLog().trim(),  containsString("1602078"));
+		Assert.assertThat(outContent.toString(),  containsString("1602078"));
 	}
 
 	@Test
 	public void TestSize(){
 		String [] flagArgs = new String[]{"-c", "src\\test\\Test"};
 		WordCount.main(flagArgs);
-		Assert.assertThat(systemOutRule.getLog().trim(),  containsString("185"));
+		Assert.assertThat(outContent.toString(),  containsString("185"));
 	}
 
 	@Test
 	public void TestSizeLargeFile(){
 		String [] flagArgs = new String[]{"-c", "src\\test\\Trial"};
 		WordCount.main(flagArgs);
-		Assert.assertThat(systemOutRule.getLog().trim(),  containsString("1629670"));
+		Assert.assertThat(outContent.toString(),  containsString("1629670"));
 	}
 
 
