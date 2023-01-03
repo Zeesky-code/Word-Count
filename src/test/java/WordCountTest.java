@@ -3,12 +3,9 @@ import org.junit.Assert;
 import picocli.CommandLine;
 
 import java.io.*;
-import java.nio.file.Path;
 import java.util.Arrays;
 
-
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.is;
 
 
 public class WordCountTest {
@@ -29,7 +26,6 @@ public class WordCountTest {
 		System.setOut(originalOut);
 		System.setErr(originalErr);
 	}
-
 
 	@Test
 	public void TestArgsAreParsedCorrectly() {
